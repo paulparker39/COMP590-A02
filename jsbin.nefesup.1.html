@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2024 by paulparker39 (http://jsbin.com/nefesup/1/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+<style id="jsbin-css">
+canvas {
+  background-color: #a6eaff
+}
+</style>
+</head>
+<body>
+<canvas id="canvas" width="640" 
+		height="480" style="border:1px solid #000;">
+		 Your browser does not support the canvas element.
+<script id="jsbin-javascript">
+window.onload = function() {
+  var canvas = document.getElementById("canvas");
+  var context = canvas.getContext("2d");
+  
+  var car = {
+    x: canvas.width / 12,
+    y: canvas.height / 1.2,
+    velocity_x: 2,
+    direction: 1,
+    wheel_rotation: 0
+  };
+  
+  var wheel1 = {x: 10, radius: 20};
+  var wheel2 = {x: 120, radius: 20};
+  
+  requestAnimationFrame(mainLoop);
+  
+  function mainLoop() {
+    update();
+    draw();
+    requestAnimationFrame(mainLoop);
+  }
+  
+  function update() {
+    car.x += car.velocity_x * car.direction;
+    car.wheel_rotation += 0.2;
+    if (car.x + 145 > canvas.width || car.x - 55 < 0) {
+      car.direction *= -1;
+    }
+  }
+  
+  function draw() {    
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    drawRoad();
+    context.save();
+    context.translate(car.x, car.y);
+    
+    if (car.direction === -1) {
+      context.scale(-1, 1);
+    }
+    drawWheel(wheel1.x, wheel1.radius);
+    drawWheel(wheel2.x, wheel2.radius);
+    drawBody(80);
+    context.restore();
+  }
+  
+  function drawRoad() {
+    context.fillStyle = "black";
+    context.fillRect(0, 420, 640, 60);
+    var tracker = 25;
+    context.fillStyle = "yellow";
+    while (tracker < canvas.width) {
+      context.fillRect(tracker, 450, 15, 6);
+      tracker += 100
+    }
+  }
+  
+  function drawWheel(x, radius) {
+    context.beginPath();
+    context.arc(x, 0, radius, 0, 2 * Math.PI, false);
+    context.fillStyle = "black";
+    context.fill();
+    context.lineWidth = 3;
+    context.strokeStyle = "gold";
+    context.stroke();
+    drawChevyLogo(x);
+  }
+  
+  function drawBody(radius) {
+    context.save();
+    context.rotate(Math.PI);
+    context.beginPath();
+    context.arc(-65, 15, radius, 0, Math.PI, false);
+    context.fillStyle = "red";
+    context.fill();
+    context.lineWidth = 2;
+    context.strokeStyle = "black";
+    context.stroke();
+    drawWindows();
+    drawLights();
+    context.restore();
+  }
+  
+  function drawWindows() {
+    context.save();
+    context.rotate(Math.PI / 2);
+    context.fillStyle = "#6fb2ff";
+    context.fillRect(25, 25, 50, 25);
+    context.fillRect(25, 80, 50, 25);
+    context.restore();
+  }
+  
+  function drawChevyLogo(x) {
+    context.save();
+    context.translate(x, 0);
+    context.rotate(car.wheel_rotation);
+    context.fillStyle = "gold";
+    context.fillRect(-2, -5, 4, 12);
+    context.fillRect(-10, -1, 20, 4);
+    context.restore();
+  }
+  
+  function drawLights() {
+    context.fillStyle = "yellow";
+    context.fillRect(-130, 40, 10, 10);
+    context.fillRect(-135, 20, 10, 10);
+    context.fillStyle = "black";
+    context.beginPath();
+    context.arc(-125, 45, 2, 0, 2 * Math.PI, false);
+    context.arc(-130, 25, 2, 0, 2 * Math.PI, false);
+    context.fill();
+  }
+};
+
+
+
+
+
+
+</script>
+</body>
+</html>
